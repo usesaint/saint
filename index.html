@@ -2134,8 +2134,67 @@
 
       body::after {
         animation: none;
-        filter: blur(6px);
-        opacity: 0.38;
+        filter: none;
+        opacity: 0;
+      }
+
+      body::before {
+        opacity: 0.08;
+      }
+
+      .hero,
+      .menu-overlay,
+      .game-overlay,
+      .hero-card,
+      .section,
+      .menu-card,
+      .game-card,
+      .music-toggle,
+      .theme-toggle,
+      .game-toggle,
+      .top-toggle,
+      .home-toggle,
+      .status-pill {
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+      }
+
+      .hero-card,
+      .section,
+      .menu-card,
+      .game-card {
+        box-shadow: 0 14px 34px rgba(49, 45, 42, 0.08);
+      }
+
+      body[data-theme="dark"] .hero-card,
+      body[data-theme="dark"] .section,
+      body[data-theme="dark"] .menu-card,
+      body[data-theme="dark"] .game-card {
+        box-shadow: 0 14px 34px rgba(0, 0, 0, 0.24);
+      }
+
+      .hero-trace,
+      .border-trace,
+      .menu-card::before,
+      .game-card::before,
+      .command-card::before,
+      .docs-card::before {
+        animation: none !important;
+        filter: none !important;
+        opacity: 0.22;
+      }
+
+      .command-card::before,
+      .docs-card::before {
+        display: none;
+      }
+
+      .nav,
+      .menu-card,
+      .game-card,
+      .section,
+      .docs-panel {
+        filter: none !important;
       }
 
       .wrap {
@@ -4471,6 +4530,8 @@
     let gamePaused = false;
     let pausedFrameDrawn = false;
     let gameAnimationFrame = null;
+    let gameLastPaint = 0;
+    const mobileGameFrameMs = window.matchMedia?.("(max-width: 620px)")?.matches ? 33 : 0;
     let gameAudioContext = null;
     let obstacleX = 0;
     let obstacleBlocks = 1;
@@ -5419,6 +5480,11 @@
         gameAnimationFrame = null;
         return;
       }
+      if (mobileGameFrameMs && timestamp && timestamp - gameLastPaint < mobileGameFrameMs) {
+        gameAnimationFrame = requestAnimationFrame(drawBunnyGame);
+        return;
+      }
+      gameLastPaint = timestamp || 0;
       if (gamePaused) {
         if (!pausedFrameDrawn) {
           drawPausedOverlay();
