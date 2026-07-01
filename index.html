@@ -71,6 +71,7 @@
     html {
       scroll-behavior: smooth;
       overflow-x: hidden;
+      font-size: 92%;
     }
 
     body {
@@ -152,6 +153,48 @@
       display: grid;
       place-items: center;
       text-align: center;
+      transition: opacity 620ms ease, transform 720ms cubic-bezier(.2, .8, .2, 1), filter 620ms ease;
+    }
+
+    body:not(.entered) .hero {
+      position: fixed;
+      inset: 0;
+      z-index: 42;
+      min-height: 100vh;
+      padding: 22px;
+      background: rgba(247, 243, 237, 0.24);
+      backdrop-filter: blur(22px);
+    }
+
+    body[data-theme="dark"]:not(.entered) .hero {
+      background: rgba(23, 17, 13, 0.34);
+    }
+
+    body.site-entering .hero {
+      position: fixed;
+      inset: 0;
+      z-index: 42;
+      min-height: 100vh;
+      padding: 22px;
+      background: rgba(247, 243, 237, 0.24);
+      backdrop-filter: blur(22px);
+      opacity: 1;
+      transform: none;
+      filter: none;
+      pointer-events: none;
+    }
+
+    body[data-theme="dark"].site-entering .hero {
+      background: rgba(23, 17, 13, 0.34);
+    }
+
+    body:not(.entered) .policy-section,
+    body:not(.entered) .divider,
+    body.site-entering .policy-section,
+    body.site-entering .divider {
+      visibility: hidden;
+      opacity: 0;
+      pointer-events: none;
     }
 
     .hero-card {
@@ -164,7 +207,77 @@
       background: var(--card);
       box-shadow: var(--shadow);
       backdrop-filter: blur(22px);
-      transition: transform 240ms ease, box-shadow 240ms ease, background 300ms ease, border-color 300ms ease;
+      transition:
+        width 760ms cubic-bezier(.2, .8, .2, 1),
+        padding 760ms cubic-bezier(.2, .8, .2, 1),
+        transform 520ms cubic-bezier(.2, .8, .2, 1),
+        box-shadow 240ms ease,
+        background 300ms ease,
+        border-color 300ms ease,
+        filter 520ms ease,
+        opacity 520ms ease;
+    }
+
+    body:not(.entered) .hero-card {
+      width: min(430px, calc(100vw - 34px));
+      padding: 54px 28px 48px;
+      animation: introModalIn 820ms cubic-bezier(.18, .86, .24, 1) both;
+    }
+
+    body.site-entering .hero-card {
+      animation: none;
+    }
+
+    body.entered.entered-ready .hero-card {
+      animation: none;
+    }
+
+    @keyframes introModalIn {
+      from {
+        opacity: 0;
+        transform: translateY(22px) scale(0.94);
+        filter: blur(12px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0);
+      }
+    }
+
+    @keyframes introModalOut {
+      0% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0);
+      }
+
+      55% {
+        opacity: 0.74;
+        transform: translateY(-8px) scale(0.985);
+        filter: blur(3px);
+      }
+
+      100% {
+        opacity: 0;
+        transform: translateY(24px) scale(0.94);
+        filter: blur(14px);
+      }
+    }
+
+    @keyframes mainCardIn {
+      from {
+        opacity: 0;
+        transform: translateY(18px) scale(0.98);
+        filter: blur(8px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0);
+      }
     }
 
     .hero-card::before {
@@ -261,38 +374,44 @@
       max-height: 0;
       opacity: 0;
       overflow: hidden;
-      transform: translateY(8px);
-      transition: max-height 520ms ease, opacity 420ms ease, transform 420ms ease;
+      transform: translateY(16px) scale(0.985);
+      filter: blur(6px);
+      transition:
+        max-height 820ms cubic-bezier(.16, 1, .3, 1),
+        opacity 720ms ease,
+        transform 820ms cubic-bezier(.16, 1, .3, 1),
+        filter 720ms ease;
     }
 
-    body.entered .nav {
+    body.entered-ready .nav {
       max-height: 240px;
       opacity: 1;
       transform: translateY(0);
+      filter: blur(0);
     }
 
-    body.entered .nav :is(a, button) {
-      animation: buttonIn 520ms ease both;
+    body.entered-ready .nav :is(a, button) {
+      animation: buttonIn 780ms cubic-bezier(.16, 1, .3, 1) both;
     }
 
-    body.entered .nav :is(a, button):nth-child(1) {
+    body.entered-ready .nav :is(a, button):nth-child(1) {
       animation-delay: 80ms;
     }
 
-    body.entered .nav :is(a, button):nth-child(2) {
-      animation-delay: 170ms;
+    body.entered-ready .nav :is(a, button):nth-child(2) {
+      animation-delay: 190ms;
     }
 
-    body.entered .nav :is(a, button):nth-child(3) {
-      animation-delay: 260ms;
+    body.entered-ready .nav :is(a, button):nth-child(3) {
+      animation-delay: 300ms;
     }
 
     .menu-trigger {
       display: inline-grid;
       position: fixed;
-      right: 18px;
-      bottom: 180px;
-      z-index: 20;
+      right: max(18px, env(safe-area-inset-right));
+      bottom: calc(max(18px, env(safe-area-inset-bottom)) + 162px);
+      z-index: 24;
       place-items: center;
       width: 42px;
       height: 42px;
@@ -308,12 +427,12 @@
       opacity: 0;
       max-height: 0;
       overflow: hidden;
-      transform: translateY(8px);
+      transform: translateY(14px) scale(0.94);
       pointer-events: none;
-      transition: opacity 420ms ease, transform 420ms ease, background 180ms ease, border-color 180ms ease, max-height 360ms ease, margin 360ms ease;
+      transition: opacity 720ms ease, transform 760ms cubic-bezier(.16, 1, .3, 1), background 180ms ease, border-color 180ms ease, max-height 620ms ease, margin 620ms ease;
     }
 
-    body.entered .menu-trigger {
+    body.entered-ready .menu-trigger {
       opacity: 1;
       max-height: 42px;
       transform: translateY(0);
@@ -322,9 +441,9 @@
 
     .home-toggle {
       position: fixed;
-      right: 18px;
-      bottom: 234px;
-      z-index: 20;
+      right: max(18px, env(safe-area-inset-right));
+      bottom: calc(max(18px, env(safe-area-inset-bottom)) + 216px);
+      z-index: 24;
       display: grid;
       place-items: center;
       width: 42px;
@@ -500,6 +619,11 @@
       pointer-events: auto;
     }
 
+    body.menu-closing .menu-overlay {
+      opacity: 0;
+      pointer-events: none;
+    }
+
     .menu-card {
       position: relative;
       width: min(560px, 100%);
@@ -518,6 +642,12 @@
       opacity: 1;
       transform: translateY(0) scale(1);
       filter: blur(0);
+    }
+
+    body.menu-closing .menu-card {
+      opacity: 0;
+      transform: translateY(14px) scale(0.985);
+      filter: blur(2px);
     }
 
     .menu-head {
@@ -545,12 +675,53 @@
       cursor: pointer;
     }
 
+    .menu-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-left: auto;
+    }
+
+    .menu-policy-tabs {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--button-bg);
+    }
+
+    .menu-policy-tabs button {
+      min-height: 38px;
+      padding: 0 11px;
+      border: 0;
+      border-right: 1px solid var(--line);
+      background: transparent;
+      color: var(--muted);
+      font: inherit;
+      font-size: 0.74rem;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      transition: color 180ms ease, background 180ms ease;
+    }
+
+    .menu-policy-tabs button:last-child {
+      border-right: 0;
+    }
+
+    .menu-policy-tabs button:hover {
+      color: var(--ink);
+      background: var(--button-hover);
+    }
+
     .menu-list {
       display: grid;
       gap: 12px;
     }
 
-    .menu-list :is(a, button) {
+    .menu-list > :is(a, button),
+    .menu-invite-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -561,21 +732,56 @@
       background: var(--button-bg);
       color: var(--ink);
       text-decoration: none;
-      font: inherit;
+      font-family: inherit;
+      font-size: 0.92rem;
+      line-height: 1.4;
       text-align: left;
       letter-spacing: 0.08em;
       cursor: pointer;
       transition: transform 180ms ease, background 180ms ease, border-color 180ms ease;
     }
 
-    body.menu-open .menu-list :is(a, button) {
+    .menu-invite-row a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .copy-invite {
+      margin-left: auto;
+      padding: 5px 9px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--button-bg) 62%, transparent);
+      color: var(--muted);
+      font-family: inherit;
+      font-size: 0.64rem;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      transition: color 180ms ease, background 180ms ease, border-color 180ms ease;
+    }
+
+    .copy-invite:hover,
+    .copy-invite:focus-visible {
+      color: var(--ink);
+      background: var(--button-hover);
+      outline: none;
+    }
+
+    .menu-list .caps-link {
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+    }
+
+    body.menu-open .menu-list > :is(a, button, .menu-invite-row) {
       animation: menuItemIn 420ms ease both;
     }
 
-    body.menu-open .menu-list :is(a, button):nth-child(1) { animation-delay: 80ms; }
-    body.menu-open .menu-list :is(a, button):nth-child(2) { animation-delay: 130ms; }
-    body.menu-open .menu-list :is(a, button):nth-child(3) { animation-delay: 180ms; }
-    body.menu-open .menu-list :is(a, button):nth-child(4) { animation-delay: 230ms; }
+    body.menu-open .menu-list > :is(a, button, .menu-invite-row):nth-child(1) { animation-delay: 80ms; }
+    body.menu-open .menu-list > :is(a, button, .menu-invite-row):nth-child(2) { animation-delay: 130ms; }
+    body.menu-open .menu-list > :is(a, button, .menu-invite-row):nth-child(3) { animation-delay: 180ms; }
+    body.menu-open .menu-list > :is(a, button, .menu-invite-row):nth-child(4) { animation-delay: 230ms; }
+    body.menu-open .menu-list > :is(a, button, .menu-invite-row):nth-child(5) { animation-delay: 280ms; }
+    body.menu-open .menu-list > :is(a, button, .menu-invite-row):nth-child(6) { animation-delay: 330ms; }
 
     @keyframes menuItemIn {
       from {
@@ -589,12 +795,14 @@
       }
     }
 
-    .menu-list :is(a, button)::after {
+    .menu-list > :is(a, button)::after,
+    .menu-invite-row::after {
       content: "›";
       color: var(--muted);
     }
 
-    .menu-list :is(a, button):hover {
+    .menu-list > :is(a, button):hover,
+    .menu-invite-row:hover {
       transform: translateY(-1px);
       background: var(--button-hover);
       border-color: rgba(183, 159, 135, 0.35);
@@ -602,9 +810,9 @@
 
     .music-toggle {
       position: fixed;
-      right: 18px;
-      bottom: 126px;
-      z-index: 10;
+      right: max(18px, env(safe-area-inset-right));
+      bottom: calc(max(18px, env(safe-area-inset-bottom)) + 108px);
+      z-index: 24;
       display: grid;
       place-items: center;
       width: 42px;
@@ -619,7 +827,7 @@
       box-shadow: var(--small-shadow);
       backdrop-filter: blur(16px);
       cursor: pointer;
-      transition: transform 180ms ease, background 180ms ease, border-color 180ms ease, color 180ms ease;
+      transition: transform 360ms cubic-bezier(.16, 1, .3, 1), background 220ms ease, border-color 220ms ease, color 220ms ease;
     }
 
     .music-toggle:hover {
@@ -641,9 +849,9 @@
 
     .theme-toggle {
       position: fixed;
-      right: 18px;
-      bottom: 72px;
-      z-index: 10;
+      right: max(18px, env(safe-area-inset-right));
+      bottom: max(18px, env(safe-area-inset-bottom));
+      z-index: 24;
       display: grid;
       place-items: center;
       width: 42px;
@@ -658,7 +866,7 @@
       box-shadow: var(--small-shadow);
       backdrop-filter: blur(16px);
       cursor: pointer;
-      transition: transform 180ms ease, background 180ms ease, border-color 180ms ease, color 180ms ease;
+      transition: transform 360ms cubic-bezier(.16, 1, .3, 1), background 220ms ease, border-color 220ms ease, color 220ms ease;
     }
 
     .theme-toggle:hover {
@@ -684,18 +892,18 @@
       box-shadow: var(--small-shadow);
       backdrop-filter: blur(16px);
       cursor: pointer;
-      transition: transform 180ms ease, background 180ms ease, border-color 180ms ease, color 180ms ease;
+      transition: opacity 720ms ease, transform 760ms cubic-bezier(.16, 1, .3, 1), background 220ms ease, border-color 220ms ease, color 220ms ease;
     }
 
     .game-toggle {
-      right: 18px;
-      bottom: 18px;
+      right: max(18px, env(safe-area-inset-right));
+      bottom: calc(max(18px, env(safe-area-inset-bottom)) + 54px);
       opacity: 0;
-      transform: translateY(8px);
+      transform: translateY(16px) scale(0.88);
       pointer-events: none;
     }
 
-    body.entered .game-toggle {
+    body.entered-ready .game-toggle {
       opacity: 1;
       transform: translateY(0);
       pointer-events: auto;
@@ -741,6 +949,11 @@
       pointer-events: auto;
     }
 
+    body.game-closing .game-overlay {
+      opacity: 0;
+      pointer-events: none;
+    }
+
     .game-card {
       position: relative;
       width: min(520px, 100%);
@@ -759,6 +972,12 @@
       opacity: 1;
       transform: translateY(0) scale(1);
       filter: blur(0);
+    }
+
+    body.game-closing .game-card {
+      opacity: 0;
+      transform: translateY(14px) scale(0.985);
+      filter: blur(2px);
     }
 
     .game-head {
@@ -882,10 +1101,17 @@
       text-align: center;
     }
 
-    .game-sound {
+    .game-mini-controls {
       position: absolute;
       right: 18px;
       bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .game-sound,
+    .game-pause {
       display: grid;
       place-items: center;
       width: 34px;
@@ -901,13 +1127,16 @@
       -webkit-tap-highlight-color: transparent;
     }
 
-    .game-sound.is-on {
+    .game-sound.is-on,
+    .game-pause.is-paused {
       color: var(--ink);
       background: color-mix(in srgb, var(--button-hover) 78%, transparent);
     }
 
     .game-sound:hover,
-    .game-sound:focus-visible {
+    .game-sound:focus-visible,
+    .game-pause:hover,
+    .game-pause:focus-visible {
       background: var(--button-hover);
       outline: none;
     }
@@ -949,6 +1178,19 @@
     #commands.is-active,
     #documentation.is-active {
       display: block;
+      animation: softPageIn 720ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+
+    @keyframes softPageIn {
+      from {
+        opacity: 0;
+        transform: translateY(16px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     body.commands-open .hero,
@@ -971,7 +1213,8 @@
     body.policy-open .policy-section.is-current-policy {
       display: block;
       margin-top: 76px;
-      animation: policyCardIn 980ms cubic-bezier(0.16, 1, 0.3, 1) both;
+      animation: policyCardIn 760ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+      will-change: opacity, transform;
     }
 
     body.policy-open .divider {
@@ -981,20 +1224,12 @@
     @keyframes policyCardIn {
       from {
         opacity: 0;
-        transform: translateY(48px) scale(0.972);
-        filter: blur(12px);
-      }
-
-      58% {
-        opacity: 0.82;
-        transform: translateY(8px) scale(0.996);
-        filter: blur(3px);
+        transform: translateY(10px);
       }
 
       to {
         opacity: 1;
-        transform: translateY(0) scale(1);
-        filter: blur(0);
+        transform: translateY(0);
       }
     }
 
@@ -1205,25 +1440,39 @@
     }
 
     body[data-theme="dark"] #terms {
-      border-color: rgba(173, 119, 82, 0.26);
+      border-color: rgba(214, 176, 136, 0.34);
       background:
-        radial-gradient(circle at 92% 12%, rgba(107, 69, 48, 0.18), transparent 34%),
-        var(--card);
+        radial-gradient(circle at 92% 12%, rgba(156, 102, 65, 0.24), transparent 34%),
+        linear-gradient(145deg, rgba(64, 41, 29, 0.88), rgba(42, 28, 21, 0.86));
     }
 
     body[data-theme="dark"] #privacy {
-      border-color: rgba(154, 103, 73, 0.22);
+      border-color: rgba(198, 153, 116, 0.32);
       background:
-        radial-gradient(circle at 8% 18%, rgba(77, 50, 37, 0.2), transparent 32%),
-        radial-gradient(circle at 92% 88%, rgba(118, 76, 53, 0.15), transparent 34%),
-        var(--card);
+        radial-gradient(circle at 8% 18%, rgba(122, 77, 51, 0.26), transparent 32%),
+        radial-gradient(circle at 92% 88%, rgba(146, 94, 62, 0.18), transparent 34%),
+        linear-gradient(145deg, rgba(55, 35, 25, 0.88), rgba(35, 24, 19, 0.9));
     }
 
     body[data-theme="dark"] #support {
-      border-color: rgba(173, 119, 82, 0.28);
+      border-color: rgba(214, 176, 136, 0.34);
       background:
-        linear-gradient(145deg, rgba(67, 44, 33, 0.42), rgba(43, 30, 24, 0.28)),
-        var(--card);
+        linear-gradient(145deg, rgba(68, 43, 30, 0.9), rgba(40, 27, 21, 0.88));
+    }
+
+    body[data-theme="dark"] .menu-policy-tabs {
+      border-color: var(--line);
+      background: var(--button-bg);
+    }
+
+    body[data-theme="dark"] .menu-policy-tabs button {
+      border-right-color: var(--line);
+      color: #ead3bb;
+    }
+
+    body[data-theme="dark"] .menu-policy-tabs button:hover {
+      color: #fff0df;
+      background: var(--button-hover);
     }
 
     .section h2 {
@@ -1665,13 +1914,13 @@
 
     .docs-panel.is-active {
       display: block;
-      animation: docsIn 300ms ease both;
+      animation: docsIn 560ms cubic-bezier(0.16, 1, 0.3, 1) both;
     }
 
     @keyframes docsIn {
       from {
         opacity: 0;
-        transform: translateY(8px);
+        transform: translateY(14px);
       }
 
       to {
@@ -1683,6 +1932,11 @@
     .docs-panel h3 {
       margin-top: 0;
       margin-bottom: 12px;
+    }
+
+    .docs-title {
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
     }
 
     .docs-panel p {
@@ -1795,6 +2049,54 @@
       transform: translateY(0);
     }
 
+    .status-pill {
+      position: fixed;
+      top: 18px;
+      left: 18px;
+      z-index: 24;
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      min-height: 34px;
+      padding: 0 13px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: color-mix(in srgb, var(--card) 72%, transparent);
+      color: var(--muted);
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      box-shadow: var(--small-shadow);
+      backdrop-filter: blur(14px);
+      opacity: 0;
+      transform: translateY(-8px);
+      pointer-events: none;
+      transition: opacity 520ms ease, transform 520ms ease;
+    }
+
+    body.entered .status-pill {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .status-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #7fb985;
+      box-shadow: 0 0 0 4px rgba(127, 185, 133, 0.12), 0 0 14px rgba(127, 185, 133, 0.38);
+    }
+
+    .status-dot[data-status="idle"] {
+      background: #d0ad73;
+      box-shadow: 0 0 0 4px rgba(208, 173, 115, 0.12), 0 0 14px rgba(208, 173, 115, 0.38);
+    }
+
+    .status-dot[data-status="offline"] {
+      background: #b9837f;
+      box-shadow: 0 0 0 4px rgba(185, 131, 127, 0.12), 0 0 14px rgba(185, 131, 127, 0.34);
+    }
+
     .divider {
       width: fit-content;
       margin: 30px auto;
@@ -1819,6 +2121,10 @@
     }
 
     @media (max-width: 620px) {
+      html {
+        font-size: 88%;
+      }
+
       .wrap {
         width: min(100% - 22px, 920px);
         padding-top: 20px;
@@ -1896,6 +2202,22 @@
 
       .docs-grid {
         grid-template-columns: 1fr;
+      }
+
+      .menu-head {
+        align-items: flex-start;
+        gap: 12px;
+      }
+
+      .menu-actions {
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+
+      .menu-policy-tabs button {
+        min-height: 34px;
+        padding: 0 8px;
+        font-size: 0.68rem;
       }
     }
   </style>
@@ -3289,15 +3611,16 @@
       <span class="corner top"></span>
       <span class="corner bottom"></span>
       <div class="section-head">
-        <h2>documentation</h2>
+        <h2 class="docs-title">DOCS</h2>
         <p class="updated">simple guides</p>
       </div>
 
       <div class="docs-layout">
         <nav class="docs-nav" aria-label="documentation topics">
           <button class="is-active" type="button" data-doc="overview">overview</button>
-          <button type="button" data-doc="getting-started">getting started</button>
-          <button type="button" data-doc="permissions">permissions</button>
+          <button type="button" data-doc="about">about</button>
+          <button type="button" data-doc="getting-started">quick start</button>
+          <button type="button" data-doc="permissions">perms</button>
           <button type="button" data-doc="message-builder">message builder</button>
           <button type="button" data-doc="welcome-boost">welcome + boost</button>
           <button type="button" data-doc="birthday-vanity">birthday + vanity</button>
@@ -3310,6 +3633,7 @@
           <button type="button" data-doc="lastfm">last.fm</button>
           <button type="button" data-doc="search">search + media</button>
           <button type="button" data-doc="resets">resets</button>
+          <button type="button" data-doc="faq">faq</button>
           <button type="button" data-doc="troubleshooting">troubleshooting</button>
           <button type="button" data-doc="privacy">privacy</button>
         </nav>
@@ -3327,9 +3651,21 @@
           <div class="docs-command-row"><span class="docs-chip">?help</span><span class="docs-chip">?commands</span><span class="docs-chip">?setup</span><span class="docs-chip">?info</span></div>
         </article>
 
+        <article class="docs-panel" data-doc-panel="about">
+          <span class="docs-kicker">saint</span>
+          <h3>about</h3>
+          <p class="docs-summary">saint is built to keep server tools calm and compact. it combines moderation, music, custom messages, roles, voice rooms, logs, search, counters, and daily utilities without making setup feel heavy.</p>
+          <div class="docs-grid">
+            <div class="docs-card"><h4>minimal</h4><p>most responses stay small, soft, and readable so the bot does not overwhelm chat.</p></div>
+            <div class="docs-card"><h4>server focused</h4><p>settings are intended to stay separate for every server where saint is added.</p></div>
+            <div class="docs-card"><h4>menu managed</h4><p>main setup commands open managers so staff can configure features without remembering every option.</p></div>
+            <div class="docs-card"><h4>customizable</h4><p>message systems support custom strings, variables, previews, tests, reset options, and clean defaults.</p></div>
+          </div>
+        </article>
+
         <article class="docs-panel" data-doc-panel="getting-started">
           <span class="docs-kicker">first setup</span>
-          <h3>getting started</h3>
+          <h3>quick start</h3>
           <p class="docs-summary">after inviting saint, run the setup command in the server you want to configure. it creates the basic pieces saint needs, then you can adjust the systems you actually use.</p>
           <div class="docs-grid">
             <div class="docs-card"><h4>1. run setup</h4><p><code>?setup</code> creates the core setup such as logs and moderation basics where possible.</p></div>
@@ -3342,7 +3678,7 @@
 
         <article class="docs-panel" data-doc-panel="permissions">
           <span class="docs-kicker">access</span>
-          <h3>permissions</h3>
+          <h3>perms</h3>
           <p class="docs-summary">saint needs different permissions depending on the feature. you do not have to give every permission forever, but setup and moderation work best when saint’s role is high enough.</p>
           <div class="docs-grid">
             <div class="docs-card"><h4>moderation</h4><p>manage messages, moderate members, kick, ban, view audit log, and manage roles for jail or mute roles.</p></div>
@@ -3510,6 +3846,18 @@
           <div class="docs-command-row"><span class="docs-chip">?bot reset confirm</span><span class="docs-chip">?welcome reset</span><span class="docs-chip">?boost reset</span><span class="docs-chip">?autorole clear</span><span class="docs-chip">?clearsnipe</span></div>
         </article>
 
+        <article class="docs-panel" data-doc-panel="faq">
+          <span class="docs-kicker">answers</span>
+          <h3>faq</h3>
+          <p class="docs-summary">quick answers for the things people usually need before inviting or setting up saint.</p>
+          <div class="docs-grid">
+            <div class="docs-card"><h4>how do i invite saint?</h4><p>use the invite button on this site, choose your server, then approve the permissions discord asks for.</p></div>
+            <div class="docs-card"><h4>what do i run first?</h4><p>run <code>?setup</code>, then <code>?help</code>. after that, open only the managers your server needs.</p></div>
+            <div class="docs-card"><h4>why did a command fail?</h4><p>most failures are permissions, role position, missing channel access, or a deleted saved channel.</p></div>
+            <div class="docs-card"><h4>does data cross servers?</h4><p>settings should be server-specific. if a server feels wrong, reset that feature and save it again there.</p></div>
+          </div>
+        </article>
+
         <article class="docs-panel" data-doc-panel="troubleshooting">
           <span class="docs-kicker">fixes</span>
           <h3>troubleshooting</h3>
@@ -3540,7 +3888,23 @@
 
     <div class="divider docs-divider">· · ·</div>
 
-    <section class="section policy-section" id="terms" data-index="01 / terms">
+    <section class="section policy-section" id="about" data-index="01 / about">
+      <span class="border-trace"></span>
+      <span class="corner top"></span>
+      <span class="corner bottom"></span>
+      <div class="section-head">
+        <h2>about saint</h2>
+        <p class="updated">soft server tools</p>
+      </div>
+
+      <p>saint is a minimal discord bot for keeping a server cleaner, softer, and easier to manage.</p>
+
+      <p>moderation, music, custom messages, roles, voice rooms, logs, daily utilities, and small automation tools live together in one calm place.</p>
+    </section>
+
+    <div class="divider">· · ·</div>
+
+    <section class="section policy-section" id="terms" data-index="02 / terms">
       <span class="border-trace"></span>
       <span class="corner top"></span>
       <span class="corner bottom"></span>
@@ -3574,7 +3938,7 @@
 
     <div class="divider">· · ·</div>
 
-    <section class="section policy-section" id="privacy" data-index="02 / privacy">
+    <section class="section policy-section" id="privacy" data-index="03 / privacy">
       <span class="border-trace"></span>
       <span class="corner top"></span>
       <span class="corner bottom"></span>
@@ -3609,7 +3973,7 @@
 
     <div class="divider">· · ·</div>
 
-    <section class="section policy-section" id="support" data-index="03 / support">
+    <section class="section policy-section" id="support" data-index="04 / support">
       <span class="border-trace"></span>
       <span class="corner top"></span>
       <span class="corner bottom"></span>
@@ -3623,8 +3987,12 @@
       <a class="support-link" href="https://discord.gg/vwkQKFQqbZ" target="_blank" rel="noopener">open support server</a>
     </section>
 
-    <p class="footer">· saint ·</p>
+    <p class="footer">· saint · updated 06.30.26</p>
   </main>
+  <div class="status-pill" aria-label="saint status">
+    <span class="status-dot" data-status="online" title="online"></span>
+    <span>online</span>
+  </div>
   <button class="home-toggle" type="button" id="homeToggle" aria-label="back to main page" title="home">
     <img src="avatar.jpg" alt="" />
   </button>
@@ -3633,14 +4001,24 @@
     <div class="menu-card" role="dialog" aria-modal="true" aria-label="menu">
       <div class="menu-head">
         <h2>menu</h2>
-        <button class="menu-close" type="button" id="menuClose" aria-label="close menu">×</button>
+        <div class="menu-actions" aria-label="policy links">
+          <div class="menu-policy-tabs">
+            <button type="button" data-policy="terms">terms</button>
+            <button type="button" data-policy="privacy">privacy</button>
+            <button type="button" data-policy="support">support</button>
+          </div>
+          <button class="menu-close" type="button" id="menuClose" aria-label="close menu">×</button>
+        </div>
       </div>
       <nav class="menu-list" aria-label="site pages">
         <a href="#commands">commands</a>
-        <a href="#documentation">documentation</a>
-        <button type="button" data-policy="terms">terms</button>
-        <button type="button" data-policy="privacy">privacy</button>
-        <button type="button" data-policy="support">support</button>
+        <a class="caps-link" href="#documentation">DOCS</a>
+        <div class="menu-invite-row">
+          <a href="https://discord.com/oauth2/authorize?client_id=1490260602172608614&permissions=8&integration_type=0&scope=bot+applications.commands" target="_blank" rel="noopener">invite</a>
+          <button class="copy-invite" type="button" id="copyInvite" aria-label="copy invite link">copy</button>
+        </div>
+        <button type="button" data-policy="about">about</button>
+        <button class="caps-link" type="button" data-doc-shortcut="faq">FAQS</button>
       </nav>
     </div>
   </aside>
@@ -3665,7 +4043,10 @@
         <canvas class="game-stage" id="bunnyGame" width="520" height="190"></canvas>
       </div>
       <p class="game-note" id="gameNote">tap, click, or press space to stack.</p>
-      <button class="game-sound" type="button" id="gameSound" aria-label="turn game sounds off" title="game sound">♪</button>
+      <div class="game-mini-controls" aria-label="game sound and pause controls">
+        <button class="game-pause" type="button" id="gamePause" aria-label="pause game" title="pause game">⦷</button>
+        <button class="game-sound" type="button" id="gameSound" aria-label="turn game sounds off" title="game sound">♪</button>
+      </div>
     </div>
   </aside>
   <audio id="bgMusic" src="music.mp3" loop preload="none"></audio>
@@ -3717,6 +4098,7 @@
     const menuTrigger = document.getElementById("menuTrigger");
     const menuOverlay = document.getElementById("menuOverlay");
     const menuClose = document.getElementById("menuClose");
+    const copyInvite = document.getElementById("copyInvite");
     const homeToggle = document.getElementById("homeToggle");
     const commandsSection = document.getElementById("commands");
     const docsSection = document.getElementById("documentation");
@@ -3724,9 +4106,13 @@
     const gameOverlay = document.getElementById("gameOverlay");
     const gameClose = document.getElementById("gameClose");
     const topToggle = document.getElementById("topToggle");
-    const policyIds = ["terms", "privacy", "support"];
+    const saintInviteUrl = "https://discord.com/oauth2/authorize?client_id=1490260602172608614&permissions=8&integration_type=0&scope=bot+applications.commands";
+    const policyIds = ["about", "terms", "privacy", "support"];
     let musicAllowed = localStorage.getItem("saint-bg-music") !== "off";
+    let musicManuallyOff = false;
     let topScrollTimers = [];
+    let menuCloseTimer = null;
+    let gameCloseTimer = null;
 
     const clearTopScrollTimers = () => {
       topScrollTimers.forEach((timer) => clearTimeout(timer));
@@ -3759,6 +4145,16 @@
       });
     };
 
+    const smoothTop = () => {
+      clearTopScrollTimers();
+      const scroller = document.scrollingElement || document.documentElement;
+      document.documentElement.scrollLeft = 0;
+      document.body.scrollLeft = 0;
+      scroller.scrollLeft = 0;
+      window.scrollTo({ left: 0, top: 0, behavior: "smooth" });
+      topScrollTimers.push(setTimeout(() => topToggle?.classList.remove("is-visible"), 720));
+    };
+
     window.addEventListener("scroll", () => {
       if (window.scrollX || document.documentElement.scrollLeft || document.body.scrollLeft) {
         lockHorizontalScroll(window.scrollY);
@@ -3786,7 +4182,14 @@
       musicToggle.classList.toggle("is-playing", playing);
       musicToggle.setAttribute("aria-label", playing ? "pause background music" : "play background music");
       musicToggle.setAttribute("title", playing ? "music on" : "music off");
+      musicAllowed = Boolean(playing);
       if (save) localStorage.setItem("saint-bg-music", playing ? "on" : "off");
+    };
+
+    const startMusicFromButton = () => {
+      if (!music || musicManuallyOff || !music.paused) return;
+      localStorage.setItem("saint-bg-music", "on");
+      tryPlayMusic(true);
     };
 
     const tryPlayMusic = async (force = false) => {
@@ -3806,24 +4209,55 @@
       }
     };
 
+    let enterTimer = null;
     const enterSite = () => {
-      document.body.classList.add("entered");
-      musicAllowed = true;
-      localStorage.setItem("saint-bg-music", "on");
-      tryPlayMusic(true);
+      if (document.body.classList.contains("entered") || document.body.classList.contains("site-entering")) return;
+      document.body.classList.remove("commands-open", "docs-open", "policy-open", "entered-ready");
+      commandsSection?.classList.remove("is-active", "is-visible");
+      docsSection?.classList.remove("is-active", "is-visible");
+      setCurrentPolicy("");
+      history.replaceState(null, "", location.pathname);
+      forceTop("auto");
+      document.body.classList.add("site-entering");
+      requestAnimationFrame(() => {
+        document.body.classList.add("entered");
+      });
+      if (!musicManuallyOff) {
+        localStorage.setItem("saint-bg-music", "on");
+        tryPlayMusic(true);
+      } else {
+        music?.pause();
+        setMusicState(false);
+      }
+      if (enterTimer) clearTimeout(enterTimer);
+      enterTimer = setTimeout(() => {
+        document.body.classList.remove("site-entering");
+        forceTop("auto");
+        requestAnimationFrame(() => {
+          document.body.classList.add("entered-ready");
+        });
+      }, 820);
     };
 
     enterButton?.addEventListener("click", enterSite);
     if (location.hash) document.body.classList.add("entered");
 
     const openMenu = () => {
+      if (menuCloseTimer) clearTimeout(menuCloseTimer);
+      document.body.classList.remove("menu-closing");
       document.body.classList.add("entered", "menu-open");
       menuOverlay?.setAttribute("aria-hidden", "false");
     };
 
     const closeMenu = () => {
-      document.body.classList.remove("menu-open");
-      menuOverlay?.setAttribute("aria-hidden", "true");
+      if (!document.body.classList.contains("menu-open")) return;
+      if (menuCloseTimer) clearTimeout(menuCloseTimer);
+      document.body.classList.add("menu-closing");
+      menuCloseTimer = setTimeout(() => {
+        document.body.classList.remove("menu-open", "menu-closing");
+        menuOverlay?.setAttribute("aria-hidden", "true");
+        menuCloseTimer = null;
+      }, 360);
     };
 
     const resetHorizontalOnly = () => {
@@ -3901,25 +4335,57 @@
       forceTop("smooth");
     };
 
-    document.addEventListener("click", (event) => {
-      const button = event.target.closest?.("button");
-      if (!button || button === musicToggle) return;
-      musicAllowed = true;
-      localStorage.setItem("saint-bg-music", "on");
-      tryPlayMusic(true);
-    });
-
     musicToggle?.addEventListener("click", async () => {
       if (!music) return;
       if (music.paused) {
+        musicManuallyOff = false;
         musicAllowed = true;
         localStorage.setItem("saint-bg-music", "on");
         await tryPlayMusic(true);
       } else {
+        musicManuallyOff = true;
         musicAllowed = false;
         music.pause();
         setMusicState(false, true);
       }
+    });
+
+    document.addEventListener("click", (event) => {
+      const button = event.target.closest?.("button, a");
+      if (!button || button === musicToggle) return;
+      startMusicFromButton();
+    });
+
+    const copyText = async (text) => {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(text);
+        return true;
+      }
+      const textarea = document.createElement("textarea");
+      textarea.value = text;
+      textarea.setAttribute("readonly", "");
+      textarea.style.position = "fixed";
+      textarea.style.opacity = "0";
+      document.body.appendChild(textarea);
+      textarea.select();
+      const copied = document.execCommand("copy");
+      textarea.remove();
+      return copied;
+    };
+
+    copyInvite?.addEventListener("click", async (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      const original = copyInvite.textContent || "copy";
+      try {
+        await copyText(saintInviteUrl);
+        copyInvite.textContent = toMonoText("copied");
+      } catch (error) {
+        copyInvite.textContent = toMonoText("copy failed");
+      }
+      setTimeout(() => {
+        copyInvite.textContent = original;
+      }, 1200);
     });
 
     themeToggle?.addEventListener("click", () => {
@@ -3929,7 +4395,10 @@
     menuTrigger?.addEventListener("click", openMenu);
     menuClose?.addEventListener("click", closeMenu);
     homeToggle?.addEventListener("click", showMainPage);
-    topToggle?.addEventListener("click", () => forceTop("smooth"));
+    topToggle?.addEventListener("click", (event) => {
+      event.preventDefault();
+      smoothTop();
+    });
     menuOverlay?.addEventListener("click", (event) => {
       if (event.target === menuOverlay) closeMenu();
     });
@@ -3938,14 +4407,23 @@
     });
 
     const openGame = () => {
+      if (gameCloseTimer) clearTimeout(gameCloseTimer);
+      document.body.classList.remove("game-closing");
       document.body.classList.add("entered", "game-open");
       gameOverlay?.setAttribute("aria-hidden", "false");
+      if (typeof setGamePausedState === "function") setGamePausedState(false);
       startBunnyGame();
     };
 
     const closeGame = () => {
-      document.body.classList.remove("game-open");
-      gameOverlay?.setAttribute("aria-hidden", "true");
+      if (!document.body.classList.contains("game-open")) return;
+      if (gameCloseTimer) clearTimeout(gameCloseTimer);
+      document.body.classList.add("game-closing");
+      gameCloseTimer = setTimeout(() => {
+        document.body.classList.remove("game-open", "game-closing");
+        gameOverlay?.setAttribute("aria-hidden", "true");
+        gameCloseTimer = null;
+      }, 360);
     };
 
     gameToggle?.addEventListener("click", openGame);
@@ -3964,9 +4442,12 @@
     const gameCard = document.querySelector(".game-card");
     const gameSwitches = document.querySelectorAll(".game-switch");
     const gameSound = document.getElementById("gameSound");
+    const gamePause = document.getElementById("gamePause");
     let activeGame = "square";
     let bunnyGameStarted = false;
     let gameSoundOn = localStorage.getItem("saint-game-sound") !== "off";
+    let gamePaused = false;
+    let pausedFrameDrawn = false;
     let gameAudioContext = null;
     let obstacleX = 0;
     let obstacleBlocks = 1;
@@ -4009,6 +4490,33 @@
         gameSound.setAttribute("title", gameSoundOn ? "game sound on" : "game sound off");
       }
       if (save) localStorage.setItem("saint-game-sound", gameSoundOn ? "on" : "off");
+    };
+
+    const setGamePausedState = (paused) => {
+      gamePaused = Boolean(paused);
+      pausedFrameDrawn = false;
+      gamePause?.classList.toggle("is-paused", gamePaused);
+      if (gamePause) {
+        gamePause.textContent = gamePaused ? "⧁" : "⦷";
+        gamePause.setAttribute("aria-label", gamePaused ? "resume game" : "pause game");
+        gamePause.setAttribute("title", gamePaused ? "play game" : "pause game");
+      }
+    };
+
+    const drawPausedOverlay = () => {
+      if (!bunnyContext || !bunnyCanvas) return;
+      const ctx = bunnyContext;
+      const styles = getComputedStyle(document.body);
+      const ink = styles.getPropertyValue("--muted").trim() || "#7c746e";
+      ctx.save();
+      ctx.fillStyle = "rgba(20, 14, 10, 0.18)";
+      ctx.fillRect(0, 0, bunnyCanvas.width, bunnyCanvas.height);
+      ctx.fillStyle = ink;
+      ctx.font = "16px ui-monospace, monospace";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText("paused", bunnyCanvas.width / 2, bunnyCanvas.height / 2);
+      ctx.restore();
     };
 
     const getGameAudioContext = () => {
@@ -4071,13 +4579,19 @@
     };
 
     setGameSoundState(gameSoundOn, false);
+    setGamePausedState(false);
     gameSound?.addEventListener("click", () => {
       setGameSoundState(!gameSoundOn);
       if (!gameSoundOn) return;
       playGameSfx("move");
     });
+    gamePause?.addEventListener("click", () => {
+      setGamePausedState(!gamePaused);
+      if (!gamePaused) playGameSfx("move");
+    });
 
     const setActiveGame = (game) => {
+      setGamePausedState(false);
       activeGame = game;
       const [title, note] = gameLabels[game] || gameLabels.square;
       if (gameTitle) gameTitle.textContent = title;
@@ -4878,6 +5392,15 @@
 
     const drawBunnyGame = (timestamp = 0) => {
       if (!bunnyContext || !bunnyCanvas) return;
+      if (gamePaused) {
+        if (!pausedFrameDrawn) {
+          drawPausedOverlay();
+          pausedFrameDrawn = true;
+        }
+        requestAnimationFrame(drawBunnyGame);
+        return;
+      }
+      pausedFrameDrawn = false;
       if (activeGame === "blocks") {
         drawBlockPuzzle();
         requestAnimationFrame(drawBunnyGame);
@@ -4986,6 +5509,7 @@
     };
 
     const handleGameCanvasAction = (event) => {
+      if (gamePaused) return;
       if (activeGame === "square") {
         stackBird();
         return;
@@ -4999,6 +5523,7 @@
 
     bunnyCanvas?.addEventListener("click", handleGameCanvasAction);
     bunnyCanvas?.addEventListener("pointerdown", (event) => {
+      if (gamePaused) return;
       if (activeGame === "blocks") {
         event.preventDefault();
         const point = getCanvasPoint(event);
@@ -5012,12 +5537,14 @@
       }
     });
     bunnyCanvas?.addEventListener("pointermove", (event) => {
+      if (gamePaused) return;
       if (activeGame === "blocks") {
         event.preventDefault();
         moveBlockDrag(event);
       }
     });
     bunnyCanvas?.addEventListener("pointerup", (event) => {
+      if (gamePaused) return;
       if (activeGame === "blocks") {
         event.preventDefault();
         endBlockDrag();
@@ -5030,15 +5557,18 @@
       }
     });
     bunnyCanvas?.addEventListener("pointerleave", () => {
+      if (gamePaused) return;
       if (activeGame === "blocks") endBlockDrag();
       if (activeGame === "pacman") pacmanSwipeStart = null;
     });
     bunnyCanvas?.addEventListener("touchstart", (event) => {
       event.preventDefault();
+      if (gamePaused) return;
       if (activeGame === "square") handleGameCanvasAction(event);
     }, { passive: false });
     window.addEventListener("keydown", (event) => {
       if (!document.body.classList.contains("game-open")) return;
+      if (gamePaused) return;
       if (activeGame === "square" && (event.code === "Space" || event.key === "ArrowUp")) {
         event.preventDefault();
         stackBird();
@@ -5061,6 +5591,18 @@
       const policyButton = event.target.closest?.("[data-policy]");
       if (policyButton) {
         goToPolicy(policyButton.dataset.policy || "");
+        return;
+      }
+      const docsShortcut = event.target.closest?.("[data-doc-shortcut]");
+      if (docsShortcut) {
+        const targetDoc = docsShortcut.dataset.docShortcut || "overview";
+        event.preventDefault();
+        history.pushState(null, "", "#documentation");
+        closeMenu();
+        requestAnimationFrame(() => {
+          showPage("documentation");
+          requestAnimationFrame(() => activateDocsPanel(targetDoc));
+        });
         return;
       }
       const link = event.target.closest?.('a[href^="#"]');
@@ -5147,21 +5689,22 @@
     const docsNavScroller = document.querySelector(".docs-nav");
     const docsNavItems = document.querySelectorAll(".docs-nav button");
     const docsPanels = document.querySelectorAll(".docs-panel");
+    const activateDocsPanel = (target = "overview") => {
+      const item = [...docsNavItems].find((button) => button.dataset.doc === target);
+      docsNavItems.forEach((button) => button.classList.toggle("is-active", button.dataset.doc === target));
+      docsPanels.forEach((panel) => panel.classList.toggle("is-active", panel.dataset.docPanel === target));
+      centerInsideScroller(item, docsNavScroller);
+    };
+
     docsNavItems.forEach((item) => {
       item.addEventListener("click", () => {
         const target = item.dataset.doc || "intro";
-        docsNavItems.forEach((button) => button.classList.toggle("is-active", button === item));
-        docsPanels.forEach((panel) => panel.classList.toggle("is-active", panel.dataset.docPanel === target));
-        centerInsideScroller(item, docsNavScroller);
+        activateDocsPanel(target);
       });
     });
 
     window.addEventListener("hashchange", () => showPage());
     window.addEventListener("popstate", () => showPage());
-    window.addEventListener("load", () => {
-      const id = location.hash.replace("#", "");
-      if (policyIds.includes(id)) showPolicyCard(id);
-    }, { once: true });
     showPage();
   </script>
 </body>
